@@ -10,13 +10,14 @@ import {
   CNav,
   CTabs,
 } from "@coreui/react";
-import React from "react";
+import React, { useState } from "react";
 import { TheHeader } from "src/containers";
 import Fisik from "./Fisik";
 import Pengawasan from "./Pengawasan";
 import Perencanaan from "./Perencanaan";
 
 const Beranda = () => {
+  const [subJudul, setSubJudul] = useState("Perencanaan");
   return (
     <>
       <div className="c-app c-default-layout">
@@ -26,21 +27,22 @@ const Beranda = () => {
           <div className="c-body" style={{ paddingTop: "70px" }}>
             <CRow className="justify-content-center">
               <CCol md="10">
-                <h1 className="text-center mb-3">Selamat Datang</h1>
+                <h1 className="text-center">Aplikasi Pengolah</h1>
+                <h2 className="text-center mb-3">Data Kontrak {subJudul}</h2>
 
                 <CCard>
                   <CCardBody>
                     <CTabs activeTab="perencanaan">
                       <CNav variant="tabs">
-                        <CNavItem>
+                        <CNavItem onClick={() => setSubJudul("Perencanaan")}>
                           <CNavLink data-tab="perencanaan">
                             Perencanaan
                           </CNavLink>
                         </CNavItem>
-                        <CNavItem>
+                        <CNavItem onClick={() => setSubJudul("Fisik")}>
                           <CNavLink data-tab="fisik">Fisik</CNavLink>
                         </CNavItem>
-                        <CNavItem>
+                        <CNavItem onClick={() => setSubJudul("Pengawasan")}>
                           <CNavLink data-tab="pengawasan">Pengawasan</CNavLink>
                         </CNavItem>
                       </CNav>

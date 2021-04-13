@@ -1,15 +1,19 @@
 import {
   CButton,
   CButtonGroup,
+  CCol,
   CDataTable,
   CFormGroup,
   CInput,
+  CLabel,
   CModal,
   CModalHeader,
   CModalTitle,
+  CSelect,
 } from "@coreui/react";
 
-import swal2 from "sweetalert2-react";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 import React, { useState } from "react";
 import data from "./data-dummy";
@@ -17,6 +21,7 @@ import Detail from "./detail";
 import Edit from "./edit";
 import Tambah from "./tambah";
 
+const MySwal = withReactContent(swal2);
 const Perencanaan = () => {
   const [modalTambah, setModalTambah] = useState(false);
   const [modalDetail, setModalDetail] = useState({
@@ -41,26 +46,24 @@ const Perencanaan = () => {
 
   // Menangani tombol hapus
   const handleDelete = (id) => {
-    swal2
-      .fire({
-        icon: "warning",
-        title: "Anda yakin ingin menghapus data ini ?",
-        text: "Jika yakin, klik YA",
-        showConfirmButton: true,
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "YA",
-      })
-      .then((res) => {
-        if (res.isConfirmed) {
-          swal2.fire({
-            icon: "success",
-            title: "Terhapus",
-            text: "Data berhasil dihapus",
-          });
-        }
-      });
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
   };
 
   return (
@@ -69,6 +72,18 @@ const Perencanaan = () => {
         <CButton color="primary" onClick={() => setModalTambah(!modalTambah)}>
           Tambah Data
         </CButton>
+
+        <CFormGroup row className="m-0" style={{width: 250}}>
+          <CCol className="pr-0" md="3">
+            <CLabel>Sorting</CLabel>
+          </CCol>
+          <CCol>
+            <CSelect id="sort" name="sort">
+              <option value="asc">A - Z</option>
+              <option value="desc">Z - A</option>
+            </CSelect>
+          </CCol>
+        </CFormGroup>
 
         <CFormGroup className="m-0">
           <CInput
@@ -137,7 +152,7 @@ const Perencanaan = () => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Tambah Data</CModalTitle>
+          <CModalTitle>Tambah Data Perencanaan</CModalTitle>
         </CModalHeader>
         <Tambah setModal={setModalTambah} />
       </CModal>
@@ -155,7 +170,7 @@ const Perencanaan = () => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Detail</CModalTitle>
+          <CModalTitle>Detail Perencanaan</CModalTitle>
         </CModalHeader>
         <Detail setModal={setModalDetail} modal={modalDetail} />
       </CModal>
@@ -173,7 +188,7 @@ const Perencanaan = () => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Edit Data</CModalTitle>
+          <CModalTitle>Edit Data Perencanaan</CModalTitle>
         </CModalHeader>
         <Edit setModal={setModalEdit} modal={modalEdit} />
       </CModal>
