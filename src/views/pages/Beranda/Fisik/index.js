@@ -20,9 +20,12 @@ import data from "./data-dummy";
 import Detail from "./detail";
 import Edit from "./edit";
 import Tambah from "./tambah";
+import CIcon from "@coreui/icons-react";
+import { cilPrint } from "@coreui/icons";
 
 const MySwal = withReactContent(swal2);
 const Fisik = () => {
+  const [filterText, setFilterText] = useState("");
   const [modalTambah, setModalTambah] = useState(false);
   const [modalDetail, setModalDetail] = useState({
     id: null,
@@ -31,6 +34,20 @@ const Fisik = () => {
   const [modalEdit, setModalEdit] = useState({
     id: null,
     modal: false,
+  });
+
+  const filteredData = data.filter((item) => {
+    if (item.ttd && item.no_urut && item.kode_bidang && item.no_dpa) {
+      if (
+        item.ttd.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.no_urut.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.kode_bidang.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.no_dpa.toLowerCase().includes(filterText.toLowerCase())
+      ) {
+        return true;
+      }
+    }
+    return false;
   });
 
   const fields = [
@@ -69,11 +86,20 @@ const Fisik = () => {
   return (
     <>
       <div className="mb-3 d-flex justify-content-between">
-        <CButton color="primary" onClick={() => setModalTambah(!modalTambah)}>
-          Tambah Data
-        </CButton>
+        <div>
+          <CButton
+            color="primary"
+            className="mr-2"
+            onClick={() => setModalTambah(!modalTambah)}
+          >
+            Tambah Data
+          </CButton>
+          <CButton style={{ height: 35 }} color="info">
+            Cetak <CIcon content={cilPrint} size="sm" />
+          </CButton>
+        </div>
 
-        <CFormGroup row className="m-0" style={{width: 250}}>
+        <CFormGroup row className="m-0" style={{ width: 250 }}>
           <CCol className="pr-0" md="3">
             <CLabel>Sorting</CLabel>
           </CCol>
@@ -91,11 +117,13 @@ const Fisik = () => {
             id="cari"
             name="cari"
             placeholder="Pencarian..."
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
           />
         </CFormGroup>
       </div>
       <CDataTable
-        items={data}
+        items={filteredData}
         fields={fields}
         striped
         itemsPerPage={10}

@@ -63,7 +63,6 @@ const Detail = ({ setModal, modal }) => {
         </table>
       </CModalBody>
       <CModalFooter>
-        <CButton color="primary">Do Something</CButton>{" "}
         <CButton
           color="secondary"
           onClick={() =>
