@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
+  CAlert,
   CButton,
   CCard,
   CCardBody,
@@ -18,15 +19,34 @@ import { LogoKotaSamarinda } from "src/assets";
 
 import * as Yup from "yup";
 import { Formik } from "formik";
+import { GlobalContext } from "src/context/Provider";
+import { useHistory } from "react-router";
+import { checkToken } from "src/helpers/checkToken";
+import login from "src/context/actions/Auth/login";
+import { cilInfo } from "@coreui/icons";
 
 const Login = () => {
-  const [loading, setLoading] = useState(false);
+  const history = useHistory();
+  const { loginState, loginDispatch } = useContext(GlobalContext);
+  const { loading, data, error } = loginState;
+  const [tokenAlert, setTokenAlert] = useState(true);
 
   // Inisialisasi state untuk handle login
   const initState = {
     username: "",
     password: "",
   };
+
+  useEffect(() => {
+    if (tokenAlert) {
+      checkToken();
+    }
+
+    if (data) {
+      window.location.href = "/konfis/beranda";
+      // history.push("/konfis/beranda");
+    }
+  }, [data, tokenAlert, history, loginDispatch]);
 
   // Set rules of form validation using Yup
   const validationSchema = Yup.object().shape({
@@ -35,7 +55,9 @@ const Login = () => {
   });
 
   const handleFormSubmit = (values) => {
-    console.log(values);
+    // Lakukan proses login
+    setTokenAlert(false);
+    login(values, loginDispatch);
   };
 
   return (
@@ -57,6 +79,14 @@ const Login = () => {
                 <CCardBody>
                   <h1>Login</h1>
                   <p className="text-muted">Login ke akun Anda</p>
+                  {error && (
+                    <CAlert closeButton className="alert-danger" fade>
+                      <span className="alert-inner--icon">
+                        <CIcon content={cilInfo} color="white" />
+                      </span>{" "}
+                      <span className="alert-inner--text ml-2">{error} !</span>
+                    </CAlert>
+                  )}
                   <Formik
                     initialValues={initState}
                     validationSchema={validationSchema}
@@ -149,10 +179,8 @@ const Login = () => {
                               type="submit"
                               disabled={loading ? true : false}
                             >
-                              Login
+                              {loading ? "Harap tunggu..." : "Simpan"}
                             </CButton>
-
-                            {loading && "Harap tunggu..."}
                           </CCol>
                         </CRow>
                       </CForm>

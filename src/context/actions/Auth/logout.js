@@ -4,7 +4,7 @@ const logout = () => {
   axiosInstance
     .post("logout")
     .then((res) => {})
-    .catch((err) => console.log(err.response.message));
+    .catch((err) => console.log(err.response.data.message));
 };
 
 export default logout;
