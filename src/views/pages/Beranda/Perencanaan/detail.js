@@ -28,10 +28,10 @@ const Detail = ({ setModal, modal }) => {
               </tr>
 
               <tr>
-                <th>No. Urut</th>
+                <th>No. Pek</th>
               </tr>
               <tr>
-                <td>{data.no_urut}</td>
+                <td>{data.no_pek}</td>
               </tr>
 
               <tr>

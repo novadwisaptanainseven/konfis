@@ -4,6 +4,7 @@ import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
 
+// const baseURL = "https://disperkim.samarindakota.go.id/konfis_api/api/";
 const baseURL = "http://127.0.0.1:8000/api/";
 sessionStorage.baseURL = baseURL;
 let headers = {};

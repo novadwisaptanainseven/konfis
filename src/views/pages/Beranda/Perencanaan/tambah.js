@@ -32,7 +32,7 @@ const Tambah = ({ setModal }) => {
 
   const validationSchema = Yup.object().shape({
     kode_bidang: Yup.string().required("Kode bidang harus diisi"),
-    no_urut: Yup.string().required("No. urut harus diisi"),
+    no_urut: Yup.string().required("No. Pek harus diisi"),
     no_dpa: Yup.string().required("No. DPA harus diisi"),
     uraian: Yup.string().required("Uraian harus diisi"),
     tanggal: Yup.string().required("Tanggal harus diisi"),
@@ -122,7 +122,7 @@ const Tambah = ({ setModal }) => {
                 )}
               </CFormGroup>
               <CFormGroup>
-                <CLabel>No. Urut</CLabel>
+                <CLabel>No. Pek</CLabel>
                 <CInput
                   type="text"
                   id="no_urut"

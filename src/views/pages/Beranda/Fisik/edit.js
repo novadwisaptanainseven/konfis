@@ -35,7 +35,7 @@ const Edit = ({ setModal, modal }) => {
 
   const initState = {
     kode_bidang: data ? data.kode_bidang : "",
-    no_urut: data ? data.no_urut : "",
+    no_pek: data ? data.no_pek : "",
     no_dpa: data ? data.no_dpa : "",
     uraian: data ? data.uraian : "",
     tanggal: data ? data.tanggal : "",
@@ -44,7 +44,7 @@ const Edit = ({ setModal, modal }) => {
 
   const validationSchema = Yup.object().shape({
     kode_bidang: Yup.string().required("Kode bidang harus diisi"),
-    no_urut: Yup.string().required("No. urut harus diisi"),
+    no_pek: Yup.string().required("No. Pek harus diisi"),
     no_dpa: Yup.string().required("No. DPA harus diisi"),
     uraian: Yup.string().required("Uraian harus diisi"),
     tanggal: Yup.string().required("Tanggal harus diisi"),
@@ -135,18 +135,18 @@ const Edit = ({ setModal, modal }) => {
                   <CLabel>No. Urut</CLabel>
                   <CInput
                     type="text"
-                    id="no_urut"
-                    name="no_urut"
+                    id="no_pek"
+                    name="no_pek"
                     placeholder="Masukkan nomor urut"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.no_urut || ""}
+                    value={values.no_pek || ""}
                     className={
-                      errors.no_urut && touched.no_urut ? "is-invalid" : null
+                      errors.no_pek && touched.no_pek ? "is-invalid" : null
                     }
                   />
-                  {errors.no_urut && touched.no_urut && (
-                    <div className="invalid-feedback">{errors.no_urut}</div>
+                  {errors.no_pek && touched.no_pek && (
+                    <div className="invalid-feedback">{errors.no_pek}</div>
                   )}
                 </CFormGroup>
                 <CFormGroup>

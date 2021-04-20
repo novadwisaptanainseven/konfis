@@ -122,7 +122,7 @@ const Tambah = ({ setModal }) => {
                 )}
               </CFormGroup>
               <CFormGroup>
-                <CLabel>No. Urut</CLabel>
+                <CLabel>No. Pek</CLabel>
                 <CInput
                   type="text"
                   id="no_urut"
