@@ -5,11 +5,11 @@ const deletePengawasan = (id, dispatch) => {
   axiosInstance
     .delete(`pengawasan/${id}`)
     .then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       getPengawasan(dispatch);
     })
     .catch((err) => {
-      console.log(err.response.data);
+      // console.log(err.response.data);
     });
 };
 

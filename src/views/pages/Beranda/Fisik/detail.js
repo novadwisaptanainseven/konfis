@@ -1,66 +1,73 @@
 import { CButton, CModalBody, CModalFooter } from "@coreui/react";
-import React, { useEffect } from "react";
+import { format } from "date-fns";
+import React, { useEffect, useState } from "react";
+import getFisikById from "src/context/actions/Fisik/getFisikById";
 
 const Detail = ({ setModal, modal }) => {
+  const [data, setData] = useState("");
+
   useEffect(() => {
     if (modal.id) {
-      console.log(modal.id);
+      getFisikById(modal.id, setData);
     }
+
+    return () => setData("");
   }, [modal]);
 
   return (
     <>
       <CModalBody>
-        <table className="table table-striped">
-          <tbody>
-            <tr>
-              <th>Kode. Bidang</th>
-            </tr>
-            <tr>
-              <td>123</td>
-            </tr>
+        {data ? (
+          <table className="table table-striped">
+            <tbody>
+              <tr>
+                <th>Kode. Bidang</th>
+              </tr>
+              <tr>
+                <td>{data.kode_bidang}</td>
+              </tr>
 
-            <tr>
-              <th>No. Urut</th>
-            </tr>
-            <tr>
-              <td>600</td>
-            </tr>
+              <tr>
+                <th>No. Urut</th>
+              </tr>
+              <tr>
+                <td>{data.no_urut}</td>
+              </tr>
 
-            <tr>
-              <th>No. DPA</th>
-            </tr>
-            <tr>
-              <td>123</td>
-            </tr>
+              <tr>
+                <th>No. DPA</th>
+              </tr>
+              <tr>
+                <td>{data.no_dpa}</td>
+              </tr>
 
-            <tr>
-              <th>Uraian</th>
-            </tr>
-            <tr>
-              <td>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Excepturi labore pariatur enim sit laborum, dolor impedit
-                praesentium harum aliquid minima commodi quos animi ipsum
-                dolores reprehenderit quis eveniet laudantium ex.
-              </td>
-            </tr>
+              <tr>
+                <th>Uraian</th>
+              </tr>
+              <tr>
+                <td>{data.uraian}</td>
+              </tr>
 
-            <tr>
-              <th>Tanggal</th>
-            </tr>
-            <tr>
-              <td>12/11/2021</td>
-            </tr>
+              <tr>
+                <th>Tanggal</th>
+              </tr>
+              <tr>
+                <td>{format(new Date(data.tanggal), "dd/MM/yyyy")}</td>
+              </tr>
 
-            <tr>
-              <th>TTD</th>
-            </tr>
-            <tr>
-              <td>Nova Dwi Sapta</td>
-            </tr>
-          </tbody>
-        </table>
+              <tr>
+                <th>TTD</th>
+              </tr>
+              <tr>
+                <td>{data.ttd}</td>
+              </tr>
+            </tbody>
+          </table>
+        ) : (
+          <div className="text-center my-3">
+            <h4>Loading...</h4>
+          </div>
+        )}
       </CModalBody>
       <CModalFooter>
         <CButton

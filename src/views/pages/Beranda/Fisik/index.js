@@ -15,18 +15,27 @@ import {
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-import React, { useState } from "react";
-import data from "./data-dummy";
+import React, { useContext, useEffect, useState } from "react";
+// import data from "./data-dummy";
 import Detail from "./detail";
 import Edit from "./edit";
 import Tambah from "./tambah";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
+import { GlobalContext } from "src/context/Provider";
+import getFisik from "src/context/actions/Fisik/getFisik";
+import deleteFisik from "src/context/actions/Fisik/deleteFisik";
+import cetakFisik from "src/context/actions/Fisik/cetakFisik";
+import { format } from "date-fns";
 
 const MySwal = withReactContent(swal2);
+
 const Fisik = () => {
   const [filterText, setFilterText] = useState("");
   const [modalTambah, setModalTambah] = useState(false);
+  const [order, setOrder] = useState("desc");
+  const { fisikState, fisikDispatch } = useContext(GlobalContext);
+  const { data, loading } = fisikState;
   const [modalDetail, setModalDetail] = useState({
     id: null,
     modal: false,
@@ -36,12 +45,23 @@ const Fisik = () => {
     modal: false,
   });
 
+  useEffect(() => {
+    getFisik(fisikDispatch, order);
+  }, [fisikDispatch, order, modalTambah, modalEdit]);
+
   const filteredData = data.filter((item) => {
-    if (item.ttd && item.no_urut && item.kode_bidang && item.no_dpa) {
+    if (
+      item.ttd &&
+      item.no_pek &&
+      item.kode_bidang &&
+      item.no_dpa &&
+      item.uraian
+    ) {
       if (
         item.ttd.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.no_urut.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.no_pek.toLowerCase().includes(filterText.toLowerCase()) ||
         item.kode_bidang.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.uraian.toLowerCase().includes(filterText.toLowerCase()) ||
         item.no_dpa.toLowerCase().includes(filterText.toLowerCase())
       ) {
         return true;
@@ -53,7 +73,7 @@ const Fisik = () => {
   const fields = [
     "no",
     "kode_bidang",
-    "no_urut",
+    "no_pek",
     "no_dpa",
     "uraian",
     "tanggal",
@@ -74,6 +94,7 @@ const Fisik = () => {
       confirmButtonText: "YA",
     }).then((res) => {
       if (res.isConfirmed) {
+        deleteFisik(id, fisikDispatch, order);
         MySwal.fire({
           icon: "success",
           title: "Terhapus",
@@ -94,7 +115,11 @@ const Fisik = () => {
           >
             Tambah Data
           </CButton>
-          <CButton style={{ height: 35 }} color="info">
+          <CButton
+            style={{ height: 35 }}
+            color="info"
+            onClick={() => cetakFisik(order)}
+          >
             Cetak <CIcon content={cilPrint} size="sm" />
           </CButton>
         </div>
@@ -104,7 +129,12 @@ const Fisik = () => {
             <CLabel>Sorting</CLabel>
           </CCol>
           <CCol>
-            <CSelect id="sort" name="sort">
+            <CSelect
+              id="sort"
+              name="sort"
+              value={order}
+              onChange={(e) => setOrder(e.target.value)}
+            >
               <option value="asc">A - Z</option>
               <option value="desc">Z - A</option>
             </CSelect>
@@ -122,56 +152,74 @@ const Fisik = () => {
           />
         </CFormGroup>
       </div>
-      <CDataTable
-        items={filteredData}
-        fields={fields}
-        striped
-        itemsPerPage={10}
-        responsive={true}
-        pagination
-        scopedSlots={{
-          aksi: (item) => (
-            <td>
-              <CButtonGroup>
-                <CButton
-                  color="info"
-                  size="sm"
-                  onClick={() =>
-                    setModalDetail({
-                      ...modalDetail,
-                      id: item.id,
-                      modal: !modalDetail.modal,
-                    })
-                  }
-                >
-                  Detail
-                </CButton>
-                <CButton
-                  color="success"
-                  size="sm"
-                  onClick={() =>
-                    setModalEdit({
-                      ...modalDetail,
-                      id: item.id,
-                      modal: !modalEdit.modal,
-                    })
-                  }
-                >
-                  Edit
-                </CButton>
-                <CButton
-                  color="danger"
-                  size="sm"
-                  onClick={() => handleDelete(item.id)}
-                >
-                  Hapus
-                </CButton>
-              </CButtonGroup>
-            </td>
-          ),
-          uraian: (item) => <td width="500">{item.uraian}</td>,
-        }}
-      />
+      {data.length > 0 ? (
+        <CDataTable
+          items={filteredData}
+          fields={fields}
+          striped
+          itemsPerPage={10}
+          responsive={true}
+          pagination
+          scopedSlots={{
+            aksi: (item) => (
+              <td>
+                <CButtonGroup>
+                  <CButton
+                    color="info"
+                    size="sm"
+                    onClick={() =>
+                      setModalDetail({
+                        ...modalDetail,
+                        id: item.id_fisik,
+                        modal: !modalDetail.modal,
+                      })
+                    }
+                  >
+                    Detail
+                  </CButton>
+                  <CButton
+                    color="success"
+                    size="sm"
+                    onClick={() =>
+                      setModalEdit({
+                        ...modalEdit,
+                        id: item.id_fisik,
+                        modal: !modalEdit.modal,
+                      })
+                    }
+                  >
+                    Edit
+                  </CButton>
+                  <CButton
+                    color="danger"
+                    size="sm"
+                    onClick={() => handleDelete(item.id_fisik)}
+                  >
+                    Hapus
+                  </CButton>
+                </CButtonGroup>
+              </td>
+            ),
+            uraian: (item) => <td>{item.uraian}</td>,
+            tanggal: (item) => (
+              <td>{format(new Date(item.tanggal), "dd/MM/yyyy")}</td>
+            ),
+          }}
+        />
+      ) : loading ? (
+        <div className="text-center my-2">
+          <h4>Loading...</h4>
+        </div>
+      ) : (
+        <CDataTable
+          items={filteredData}
+          fields={fields}
+          striped
+          itemsPerPage={10}
+          responsive={true}
+          pagination
+        />
+      )}
 
       {/* Modal Tambah */}
       <CModal
@@ -180,7 +228,7 @@ const Fisik = () => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Tambah Data Fisik</CModalTitle>
+          <CModalTitle>Tambah Data Pengawasan</CModalTitle>
         </CModalHeader>
         <Tambah setModal={setModalTambah} />
       </CModal>
@@ -198,7 +246,7 @@ const Fisik = () => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Detail Fisik</CModalTitle>
+          <CModalTitle>Detail Pengawasan</CModalTitle>
         </CModalHeader>
         <Detail setModal={setModalDetail} modal={modalDetail} />
       </CModal>
@@ -216,7 +264,7 @@ const Fisik = () => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Edit Data Fisik</CModalTitle>
+          <CModalTitle>Edit Data Pengawasan</CModalTitle>
         </CModalHeader>
         <Edit setModal={setModalEdit} modal={modalEdit} />
       </CModal>

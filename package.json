@@ -14,7 +14,7 @@
       "url": "https://github.com/orgs/coreui/people"
     }
   ],
-  "homepage": ".",
+  "homepage": "https://disperkim.samarindakota.go.id/konfis",
   "copyright": "Copyright 2017-2020 creativeLabs Łukasz Holeczek",
   "license": "MIT",
   "private": true,
@@ -34,6 +34,7 @@
     "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "core-js": "^3.9.1",
+    "date-fns": "^2.21.1",
     "enzyme": "^3.11.0",
     "formik": "^2.2.6",
     "prop-types": "^15.7.2",

@@ -16,8 +16,7 @@ import { cekUser } from "src/context/actions/Auth/cekUser";
 const MySwal = withReactContent(Swal);
 
 const TheHeader = () => {
-  const { userState, userDispatch } = useContext(GlobalContext);
-  const { data } = userState;
+  const { userDispatch } = useContext(GlobalContext);
 
   useEffect(() => {
     cekUser(userDispatch);

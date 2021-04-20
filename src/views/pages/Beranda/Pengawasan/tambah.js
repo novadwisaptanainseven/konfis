@@ -8,12 +8,19 @@ import {
   CFormGroup,
   CTextarea,
 } from "@coreui/react";
-import React from "react";
+import React, { useState } from "react";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 import * as Yup from "yup";
 import { Formik } from "formik";
+import insertPengawasan from "src/context/actions/Pengawasan/insertPengawasan";
+
+const MySwal = withReactContent(swal2);
 
 const Tambah = ({ setModal }) => {
+  const [loading, setLoading] = useState(false);
   const initState = {
     kode_bidang: "",
     no_urut: "",
@@ -32,6 +39,35 @@ const Tambah = ({ setModal }) => {
     ttd: Yup.string().required("Ttd harus diisi"),
   });
 
+  // Fungsi untuk menampilkan alert success tambah data
+  const showAlertSuccess = () => {
+    MySwal.fire({
+      icon: "success",
+      title: "Tambah Data Berhasil",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then((res) => {
+      setModal(false);
+    });
+  };
+
+  // Fungsi untuk menampilkan alert error tambah data
+  const showAlertError = (message) => {
+    let err_message = "";
+
+    for (const key in message) {
+      err_message += `${message[key]}, `;
+    }
+
+    MySwal.fire({
+      icon: "error",
+      title: "Tambah Data Gagal",
+      text: err_message,
+    }).then((result) => {
+      setLoading(false);
+    });
+  };
+
   const handleFormSubmit = (values) => {
     const formData = new FormData();
     formData.append("kode_bidang", values.kode_bidang);
@@ -44,6 +80,8 @@ const Tambah = ({ setModal }) => {
     for (var pair of formData.entries()) {
       console.log(pair);
     }
+
+    insertPengawasan(formData, setLoading, showAlertSuccess, showAlertError);
   };
 
   return (
@@ -173,8 +211,12 @@ const Tambah = ({ setModal }) => {
               </CFormGroup>
             </CModalBody>
             <CModalFooter>
-              <CButton type="submit" color="primary">
-                Simpan
+              <CButton
+                type="submit"
+                color="primary"
+                disabled={loading ? true : false}
+              >
+                {loading ? "Sedang Menyimpan..." : "Simpan"}
               </CButton>{" "}
               <CButton color="secondary" onClick={() => setModal(false)}>
                 Cancel

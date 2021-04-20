@@ -39,7 +39,7 @@ const Login = () => {
 
   useEffect(() => {
     if (tokenAlert) {
-      checkToken();
+      checkToken(history);
     }
 
     if (data) {

@@ -4,11 +4,11 @@ const getFisikById = (id, setData) => {
   axiosInstance
     .get(`fisik/${id}`)
     .then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       setData(res.data.data);
     })
     .catch((err) => {
-      console.log(err.response.data);
+      // console.log(err.response.data);
     });
 };
 

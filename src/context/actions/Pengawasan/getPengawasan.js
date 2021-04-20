@@ -1,21 +1,21 @@
 import { ERROR, LOADING, SUCCESS } from "src/context/actionTypes";
 import axiosInstance from "src/helpers/axios";
 
-const getPerencanaan = (dispatch) => {
+const getPengawasan = (dispatch, order = "") => {
   dispatch({
     type: LOADING,
   });
   axiosInstance
-    .get(`perencanaan`)
+    .get(`pengawasan?order=${order}`)
     .then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       dispatch({
         type: SUCCESS,
         payload: res.data.data,
       });
     })
     .catch((err) => {
-      console.log(err.response.data);
+      // console.log(err.response.data);
       dispatch({
         type: ERROR,
         payload: err.response.data.message,
@@ -23,4 +23,4 @@ const getPerencanaan = (dispatch) => {
     });
 };
 
-export default getPerencanaan;
+export default getPengawasan;

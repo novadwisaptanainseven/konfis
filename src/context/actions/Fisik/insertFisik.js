@@ -1,6 +1,7 @@
 import axiosInstance from "src/helpers/axios";
 
 const insertFisik = (values, setLoading, showAlertSuccess, showAlertError) => {
+  setLoading(true);
   axiosInstance
     .post(`fisik`, values, {
       header: {
@@ -8,12 +9,12 @@ const insertFisik = (values, setLoading, showAlertSuccess, showAlertError) => {
       },
     })
     .then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       setLoading(false);
       showAlertSuccess();
     })
     .catch((err) => {
-      console.log(err.response.data);
+      // console.log(err.response.data);
       showAlertError(err.response.data.errors);
     });
 };
